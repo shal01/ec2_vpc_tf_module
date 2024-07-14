@@ -31,14 +31,14 @@ resource "aws_subnet" "sub1" {
 resource "aws_subnet" "sub2" {
    vpc_id = aws_vpc.vpc.id
    cidr_block = var.sub2_cidr_block
-   availability_zone = "us-east-1"
+   availability_zone = random_shuffle.az.result[0]
    map_public_ip_on_launch = true   
 }
 
 resource "aws_subnet" "sub3" {
    vpc_id = aws_vpc.vpc.id
    cidr_block = var.sub3_cidr_block
-   availability_zone = "us-east-1"
+   availability_zone = random_shuffle.az.result[0]
    map_public_ip_on_launch = true   
 }
 
@@ -90,17 +90,17 @@ resource "aws_security_group" "tf_vpc_sg" {
 
 resource "aws_vpc_security_group_ingress_rule" "tf_vpc_sg_ipv4_http" {
   security_group_id = aws_security_group.tf_vpc_sg.id
-  cidr_ipv4         = aws_vpc.vpc.id
+  cidr_ipv4         = aws_vpc.vpc.cidr_block
   from_port         = 80
-  ip_protocol       = "HTTP"
+  ip_protocol       = "TCP"
   to_port           = 80
 }
 
 resource "aws_vpc_security_group_ingress_rule" "tf_vpc_sg_ipv4_ssh" {
   security_group_id = aws_security_group.tf_vpc_sg.id
-  cidr_ipv4         = aws_vpc.vpc.id
+  cidr_ipv4         = aws_vpc.vpc.cidr_block
   from_port         = 22
-  ip_protocol       = "SSH"
+  ip_protocol       = "TCP"
   to_port           = 22
 }
 
